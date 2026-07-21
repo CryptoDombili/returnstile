@@ -1,6 +1,11 @@
 # Returnstile
 
+## Live Deployment
 
+- App: https://returnstile.vercel.app
+- Network: GIWA Sepolia
+- Contract: `0xfc36828B78A2388E1851C47CfB8B0900Ea119572`
+- Explorer: https://sepolia-explorer.giwa.io/address/0xfc36828B78A2388E1851C47CfB8B0900Ea119572
 
 
 ![Returnstile hero](./public/returnstile-hero.png)
@@ -50,6 +55,7 @@ It does **not** store identity documents or personal information.
 | Chain ID | `91342` |
 | RPC | `https://sepolia-rpc.giwa.io` |
 | Explorer | `https://sepolia-explorer.giwa.io` |
+| Returnstile Contract | `0xfc36828B78A2388E1851C47CfB8B0900Ea119572` |
 | DojangScroll | `0xd5077b67dcb56caC8b270C7788FC3E6ee03F17B9` |
 | Upbit Korea attester ID | `0xd99b42e778498aa3c9c1f6a012359130252780511687a35982e8e52735453034` |
 
@@ -62,7 +68,7 @@ npm install
 npm run dev
 ```
 
-The first build includes a polished interactive demo and real GIWA wallet/network connection. Contract writes are intentionally kept in demo mode until a deployed address is supplied.
+The first build includes a polished interactive demo and real GIWA wallet/network connection. The application is live on GIWA Sepolia with real on-chain event creation, wallet-bound ticket claims, ETH escrow, Return-to-Queue reassignment, organizer verification, event cancellation, and refunds.
 
 ## Compile and test contracts
 
