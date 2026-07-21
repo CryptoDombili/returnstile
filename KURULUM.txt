@@ -1,0 +1,11 @@
+RETURNSTILE V0.2 ORGANIZER PATCH
+
+1) ZIP içindeki src/App.tsx dosyasını projenizdeki src/App.tsx üzerine kopyalayın.
+2) src/components/OrganizerStudio.tsx dosyasını projenizde aynı klasöre kopyalayın.
+3) src/lib/returnstile.ts dosyasını projenizde aynı klasöre kopyalayın.
+4) src/styles-organizer-addon.css içeriğinin tamamını projenizdeki src/styles.css dosyasının EN ALTINA yapıştırın.
+5) npm run build
+6) git add src
+7) git commit -m "Add onchain organizer studio"
+8) git push
+9) Vercel otomatik deploy bittikten sonra canlı sitede For organizers > Open organizer studio ile deneyin.

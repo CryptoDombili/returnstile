@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/eventcard.tsx","./src/components/eventmodal.tsx","./src/components/logo.tsx","./src/lib/data.ts","./src/lib/giwa.ts"],"version":"5.7.3"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/accountmodal.tsx","./src/components/eventcard.tsx","./src/components/eventmodal.tsx","./src/components/logo.tsx","./src/components/mypasses.tsx","./src/components/organizerstudio.tsx","./src/lib/data.ts","./src/lib/giwa.ts","./src/lib/returnstile.ts"],"version":"5.7.3"}

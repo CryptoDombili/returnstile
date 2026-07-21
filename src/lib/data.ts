@@ -13,6 +13,17 @@ export type DemoEvent = {
   accent: string;
   image: string;
   description: string;
+  imageUrl?: string;
+  source?: 'demo' | 'onchain';
+  onchainId?: number;
+  priceWei?: bigint;
+  paymentToken?: `0x${string}`;
+  paymentAsset?: 'ETH' | 'USDC' | 'USDT';
+  returnDeadline?: number;
+  releasedSeats?: number;
+  organizer?: `0x${string}`;
+  organizerVerified?: boolean;
+  cancelled?: boolean;
 };
 
 export const demoEvents: DemoEvent[] = [
@@ -29,6 +40,8 @@ export const demoEvents: DemoEvent[] = [
     accent: 'violet',
     image: 'neon',
     description: 'A one-night electronic live set with wallet-bound entry and original-price returns.',
+    imageUrl: '/demo-events/neon-seoul-live.png',
+    organizerVerified: true,
   },
   {
     id: 2,
@@ -43,6 +56,8 @@ export const demoEvents: DemoEvent[] = [
     accent: 'lime',
     image: 'builders',
     description: 'Meet the teams building simple, useful onchain experiences for the next wave of users.',
+    imageUrl: '/demo-events/giwa-builders-night.png',
+    organizerVerified: false,
   },
   {
     id: 3,
@@ -57,5 +72,7 @@ export const demoEvents: DemoEvent[] = [
     accent: 'coral',
     image: 'arena',
     description: 'A sold-out championship where returned seats move directly to the verified waitlist.',
+    imageUrl: '/demo-events/arena-zero-finals.png',
+    organizerVerified: true,
   },
 ];
