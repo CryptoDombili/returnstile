@@ -70,7 +70,7 @@ export default function App() {
     setEventsLoading(true);
     try {
       const records = await readReturnstileEvents();
-      setOnchainEvents(records.filter((event) => event.id !== 1 && event.id !== 2 && !isArchivedEvent(event.title)).map((event, index) => ({
+      setOnchainEvents(records.filter((event) => event.id !== 1 && event.id !== 2 && event.id !== 3 && !isArchivedEvent(event.title)).map((event, index) => ({
         id: 100000 + event.id, onchainId: event.id, source: 'onchain' as const, title: event.title,
         category: event.cancelled ? 'CANCELLED' : event.paused ? 'PAUSED' : 'ONCHAIN', date: formatOnchainEventDate(event.startsAt), venue: event.venue,
         price: formatOnchainPrice(event.priceWei, event.paymentAsset), priceWei: event.priceWei, paymentToken: event.paymentToken, paymentAsset: event.paymentAsset, sold: event.activeTickets, capacity: event.capacity,
@@ -148,6 +148,12 @@ export default function App() {
       }
       setSelectedEvent(null);
       await refreshAll();
+      // Some GIWA RPC nodes can lag briefly after a confirmed ticket transaction.
+      // Retry the account read so the new pass appears without requiring a manual refresh.
+      if (wallet.address) {
+        window.setTimeout(() => { void loadAccount(wallet.address); }, 1200);
+        window.setTimeout(() => { void loadAccount(wallet.address); }, 3200);
+      }
       document.getElementById('wallet')?.scrollIntoView({ behavior: 'smooth' });
     } catch (cause) { setToast(errorMessage(cause)); }
     finally { setTicketActionLoading(false); }
