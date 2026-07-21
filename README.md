@@ -1,5 +1,13 @@
 # Returnstile
 
+
+# Returnstile
+
+![Returnstile hero](./public/returnstile-hero.png)
+
+**Tickets return to fans, not resellers.**
+
+
 **Tickets return to fans, not resellers.**
 
 Returnstile is a privacy-preserving anti-scalping event protocol designed for GIWA. Tickets are wallet-bound and cannot be privately transferred. When a holder cannot attend, the ticket is returned to the protocol, the holder receives refundable credit, and the seat is offered to the next eligible wallet at the original price.
