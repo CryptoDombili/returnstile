@@ -70,7 +70,7 @@ export default function App() {
     setEventsLoading(true);
     try {
       const records = await readReturnstileEvents();
-      setOnchainEvents(records.filter((event) => !isArchivedEvent(event.title)).map((event, index) => ({
+      setOnchainEvents(records.filter((event) => event.id !== 1 && event.id !== 2 && !isArchivedEvent(event.title)).map((event, index) => ({
         id: 100000 + event.id, onchainId: event.id, source: 'onchain' as const, title: event.title,
         category: event.cancelled ? 'CANCELLED' : event.paused ? 'PAUSED' : 'ONCHAIN', date: formatOnchainEventDate(event.startsAt), venue: event.venue,
         price: formatOnchainPrice(event.priceWei, event.paymentAsset), priceWei: event.priceWei, paymentToken: event.paymentToken, paymentAsset: event.paymentAsset, sold: event.activeTickets, capacity: event.capacity,
