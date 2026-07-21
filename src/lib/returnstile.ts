@@ -61,6 +61,7 @@ export type OnchainEvent = {
 export type AccountPass = {
   ticketId:bigint; eventId:number; title:string; venue:string; date:string; imageUrl?:string;
   returnDeadline:number; priceWei:bigint; paymentAsset:PaymentAsset; cancelled:boolean;
+  organizerVerified:boolean; verifiedOnly:boolean;
 };
 
 type StoredMetadata = Record<string,{title:string;venue:string;imageUrl?:string}>;
@@ -101,12 +102,8 @@ export async function readReturnstileEvents():Promise<OnchainEvent[]>{
 }
 export async function readAccountPasses(account:Address):Promise<AccountPass[]>{
   const events=await readReturnstileEvents();if(!RETURNSTILE_ADDRESS)return[];
-  const rows=await Promise.all(events.map(async event=>{const ticketId=await publicClient.readContract({address:RETURNSTILE_ADDRESS,abi:returnstileAbi,functionName:'activeTicketOf',args:[BigInt(event.id),account]});if(ticketId===0n)return null;const pass:AccountPass={ticketId,eventId:event.id,title:event.title,venue:event.venue,date:formatOnchainEventDate(event.startsAt),returnDeadline:event.returnDeadline,priceWei:event.priceWei,paymentAsset:event.paymentAsset,cancelled:event.cancelled};if(event.imageUrl)pass.imageUrl=event.imageUrl;return pass;}));
-  const passes:AccountPass[]=[];
-  // Cancelled events are intentionally omitted from My Passes.
-  // Refund handling remains available through the account/refund flow.
-  for(const row of rows)if(row&&!row.cancelled)passes.push(row);
-  return passes;
+  const rows=await Promise.all(events.map(async event=>{const ticketId=await publicClient.readContract({address:RETURNSTILE_ADDRESS,abi:returnstileAbi,functionName:'activeTicketOf',args:[BigInt(event.id),account]});if(ticketId===0n)return null;const pass:AccountPass={ticketId,eventId:event.id,title:event.title,venue:event.venue,date:formatOnchainEventDate(event.startsAt),returnDeadline:event.returnDeadline,priceWei:event.priceWei,paymentAsset:event.paymentAsset,cancelled:event.cancelled,organizerVerified:event.organizerVerified,verifiedOnly:event.verifiedOnly};if(event.imageUrl)pass.imageUrl=event.imageUrl;return pass;}));
+  const passes:AccountPass[]=[];for(const row of rows)if(row&&!row.cancelled)passes.push(row);return passes;
 }
 export async function readRefundCredits(account:Address):Promise<RefundBalance[]>{
   if(!RETURNSTILE_ADDRESS)return[];const tokens:[PaymentAsset,Address,number][]=[['ETH',zeroAddress,18],...(USDC_ADDRESS?[['USDC',USDC_ADDRESS,6] as [PaymentAsset,Address,number]]:[]),...(USDT_ADDRESS?[['USDT',USDT_ADDRESS,6] as [PaymentAsset,Address,number]]:[])];
