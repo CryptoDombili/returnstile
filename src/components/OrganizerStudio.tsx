@@ -28,18 +28,30 @@ async function compressImage(file: File): Promise<string> {
 }
 
 async function uploadImage(file: File): Promise<{ url: string; persisted: boolean }> {
-  const form = new FormData();
-  form.append('file', file);
+  const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  if (isLocal) return { url: await compressImage(file), persisted: false };
+
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 30000);
   try {
-    const response = await fetch('/api/upload', { method: 'POST', body: form });
-    if (response.ok) {
-      const result = await response.json() as { url?: string };
-      if (result.url) return { url: result.url, persisted: true };
+    const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': file.type },
+      body: file,
+      signal: controller.signal,
+    });
+    const result = await response.json().catch(() => ({})) as { url?: string; error?: string };
+    if (!response.ok) throw new Error(result.error || `Upload failed (${response.status}).`);
+    if (!result.url) throw new Error('Upload completed without an image URL.');
+    return { url: result.url, persisted: true };
+  } catch (cause) {
+    if (cause instanceof DOMException && cause.name === 'AbortError') {
+      throw new Error('Image upload timed out. Check the Vercel Blob connection and redeploy.');
     }
-  } catch {
-    // Local development has no Vercel function. Fall back to a compressed browser image.
+    throw cause;
+  } finally {
+    window.clearTimeout(timeout);
   }
-  return { url: await compressImage(file), persisted: false };
 }
 
 export default function OrganizerStudio({ account, onClose, onCreated }: Props) {
@@ -64,7 +76,7 @@ export default function OrganizerStudio({ account, onClose, onCreated }: Props) 
   async function chooseImage(file?: File) {
     if (!file) return;
     if (!file.type.startsWith('image/')) { setError('Choose an image file.'); return; }
-    if (file.size > 8 * 1024 * 1024) { setError('Image must be smaller than 8 MB.'); return; }
+    if (file.size > 4 * 1024 * 1024) { setError('Image must be smaller than 4 MB on the live site.'); return; }
     setUploading(true); setError(null);
     try {
       const result = await uploadImage(file);
@@ -96,7 +108,7 @@ export default function OrganizerStudio({ account, onClose, onCreated }: Props) 
           <div className="studio-image-upload">
             <input ref={fileInput} hidden type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void chooseImage(event.target.files?.[0])} />
             <button type="button" className="image-upload-button" onClick={() => fileInput.current?.click()} disabled={uploading}>
-              {uploading ? <LoaderCircle className="spin" /> : <UploadCloud />}<span><strong>{imageName || 'Upload event image'}</strong><small>JPG, PNG or WebP · max 8 MB</small></span>
+              {uploading ? <LoaderCircle className="spin" /> : <UploadCloud />}<span><strong>{imageName || 'Upload event image'}</strong><small>JPG, PNG or WebP · max 4 MB</small></span>
             </button>
             <div className="image-upload-preview">{imageUrl ? <img src={imageUrl} alt="Event preview" /> : <ImagePlus />}</div>
             {imageUrl && <small className="image-upload-note">{imagePersisted ? 'Uploaded for public display.' : 'Local preview mode. Vercel Blob activates after deployment setup.'}</small>}
