@@ -1,11 +1,10 @@
 # Returnstile
 
 
-# Returnstile
+
 
 ![Returnstile hero](./public/returnstile-hero.png)
 
-**Tickets return to fans, not resellers.**
 
 
 **Tickets return to fans, not resellers.**
